@@ -12,7 +12,7 @@ const errorMIddelware = require("./midellwares/error_midelware");
 const contactform = require("./contoller/contact-controller");
 const router = require("./router/img-route");
 const carDetail = require("./contoller/carDetail-controller");
-// const Images = require("./models/imgDetail-model");
+const Images = require("./models/imgDetail-model");
 
 const corsOption = {
     origin :"http://localhost:3000",
