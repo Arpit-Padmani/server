@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 
-const userSchema = new mongoose.Schema({
+const renterSchema = new mongoose.Schema({
     name: {
         type: String,
         require: true
@@ -45,28 +45,28 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-userSchema.pre('save', async function (next) {
-    const user = this;
-    if (!user.isModified("password")) {
+renterSchema.pre('save', async function (next) {
+    const renter = this;
+    if (!renter.isModified("password")) {
         next();
     }
     try {
         const salutRound = await bcrypt.genSalt(10);
-        const hashPassword = await bcrypt.hash(user.password, salutRound);
+        const hashPassword = await bcrypt.hash(renter.password, salutRound);
 
-        user.password = hashPassword;
+        renter.password = hashPassword;
     } catch (error) {
-        next("usr model"+error);
+        next("renter model"+error);
     }
 })
-userSchema.methods.comparePassword = async function(password){
+renterSchema.methods.comparePassword = async function(password){
     return bcrypt.compare(password,this.password);
 }
-userSchema.methods.generateToken = async function () {
+renterSchema.methods.generateToken = async function () {
     try {
         return jwt.sign(
             {
-            userId: this._id.toString(),
+            renterId: this._id.toString(),
             email: this.email,
             isAdmin: this.isAdmin
         },
@@ -79,5 +79,5 @@ userSchema.methods.generateToken = async function () {
     }
 };
 
-const User = new mongoose.model("User", userSchema);
-module.exports = User;
+const Renter = new mongoose.model("Renter", renterSchema);
+module.exports = Renter;
