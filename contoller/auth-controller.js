@@ -39,11 +39,12 @@ const register = async (req, res) => {
             message: "Registration successfully",
             token: await userCreated.generateToken(),
             userId: userCreated._id.toString(),
+            userType: userCreated.userType.toString(),
         });
     } catch (error) {
         // console.log(error);
-        // res.status(404).send("pgae not found " + error);
-        next(error);
+        res.status(404).send("pgae not found " + error);
+        // next(error);
         // console.log(error);
     }
 }
@@ -57,7 +58,7 @@ const login = async (req, res) => {
             res.status(400).json({ message: "Invalid Credentials .. " });
         }
 
-        console.log(userExist);
+        // console.log(userExist);
 
         // const passwordValid = await bcrypt.compare(password,userExist.password);
         const passwordValid = await userExist.comparePassword(password);
@@ -70,25 +71,49 @@ const login = async (req, res) => {
                 userId: userExist._id.toString(),
                 userType: userExist.userType.toString(),
             });
-        
-            // if (userExist.userType == 'owner') {
-            //     res.json({ redirect: '/admin/*' });
-            //   } else if (user.userType == 'renter') {
-            //     res.json({ redirect: '/products' });
-            //   } else {
-            //     console.log("error aya he admin route me");
-            //     // res.status(403).json({ error: 'Invalid user type' });
-            //   }
             // res.json({ email, userType });
         } else {
             next(error);
             // res.status(401).json({ message: "Invalid email or password " });
         }
-      return;
+        return;
 
 
     } catch (error) {
         console.log("error aya he login me " + error);
     }
 }
-module.exports = { home, register, login };
+
+const userdata = async (req, res) => {
+    try {
+
+        const userData = req.user;
+        // console.log("user"+userData);
+
+        res.status(201).json({ userData });
+
+
+    } catch (error) {
+        console.log("error from user route" + error);
+    }
+}
+
+const updatetUserById = async (req, res) => {
+    try {
+
+        const id = req.params.id;
+        const updatedUserData=req.body;
+        const updatedData= await user.updateOne(
+            { _id : id },
+            {$set : updatedUserData});
+            
+
+        res.status(201).json({ updatedData,message: "update successfully" });
+
+
+    } catch (error) {
+        console.log("error from user route" + error);
+    }
+}
+
+module.exports = { home, register, login, userdata, updatetUserById };

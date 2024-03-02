@@ -30,6 +30,18 @@ const userSchema = new mongoose.Schema({
     userType:{
         type: String,
         require : true
+    },
+    phoneNo:{
+        type:String
+    },
+    city:{
+        type:String
+    },
+    address:{
+        type:String
+    },
+    Occupation:{
+        type:String
     }
 });
 
@@ -44,7 +56,7 @@ userSchema.pre('save', async function (next) {
 
         user.password = hashPassword;
     } catch (error) {
-        next(error);
+        next("usr model"+error);
     }
 })
 userSchema.methods.comparePassword = async function(password){

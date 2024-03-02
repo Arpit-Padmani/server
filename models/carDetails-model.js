@@ -2,32 +2,28 @@ const {model, Schema}= require('mongoose');
 
 const CarDetailsSchema = new Schema({
     vehicleName:{
-        type: String,
-        require : true
+        type: String
     },
     vehicleModel:{
-        type: String,
-        require : true
+        type: String
     },
+    photo1: String,
+    photo2:String,
+    photo3:String,
     location:{
-        type: String,
-        require : true
+        type: String
     },
     price:{
-        type: Number,
-        require : true
+        type: Number
     },
     depositPrice:{
-        type: Number,
-        require : true
+        type: Number
     },
     city:{
-        type: String,
-        require : true
+        type: String
     },
     category:{
-        type: String,
-        require : true
+        type: String
     },
 });
 
