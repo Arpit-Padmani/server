@@ -66,18 +66,20 @@ ownerSchema.methods.generateToken = async function () {
     try {
         return jwt.sign(
             {
-            ownerId: this._id.toString(),
-            email: this.email,
-            isAdmin: this.isAdmin
-        },
-         process.env.JWT_SECRET_KEY,
-         {
-            expiresIn:"30d",
-         });
+                ownerId: this._id.toString(),
+                email: this.email,
+                userType: this.userType, // Include userType in the payload
+            },
+            process.env.JWT_SECRET_KEY,
+            {
+                expiresIn: "30d",
+            }
+        );
     } catch (error) {
         console.log(error);
     }
 };
+
 
 const Owner = new mongoose.model("Owner", ownerSchema);
 module.exports = Owner;

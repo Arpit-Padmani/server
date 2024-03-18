@@ -68,7 +68,7 @@ renterSchema.methods.generateToken = async function () {
             {
             renterId: this._id.toString(),
             email: this.email,
-            isAdmin: this.isAdmin
+            userType : this.userType
         },
          process.env.JWT_SECRET_KEY,
          {

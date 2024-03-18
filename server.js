@@ -7,6 +7,8 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const authRouter = require('./router/auth-route');
+const carDetailRouter = require('./router/carDetail-route');
+const checkoutDetailRouter = require('./router/checkOut-route');
 const connectDB = require('./utils/db');
 const errorMIddelware = require("./midellwares/error_midelware");
 const contactform = require("./contoller/contact-controller");
@@ -87,13 +89,12 @@ app.post('/api/add-vehicle', upload.fields([{ name: 'photo1' }, { name: 'photo2'
 
 
 
-
-
-
+app.use('/uploads', express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use('/api/auth', authRouter);
 app.use('/api/form', contactform);
-app.use('/api/detail', carDetail)
+app.use('/api/detail', carDetailRouter);
+app.use('/api/checkout', checkoutDetailRouter);
 
 app.use(errorMIddelware);
 

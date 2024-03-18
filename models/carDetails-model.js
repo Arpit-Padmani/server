@@ -7,6 +7,21 @@ const CarDetailsSchema = new Schema({
     vehicleModel:{
         type: String
     },
+    fuelType:{
+        type : String
+    },
+    transmissionType:{
+        type:String
+    },
+    hasGPS:{
+        type:String
+    },
+    seatingCapacity:{
+        type:String
+    },
+    modelYear:{
+        type:String
+    },
     photo1: String,
     photo2:String,
     photo3:String,
@@ -25,6 +40,9 @@ const CarDetailsSchema = new Schema({
     category:{
         type: String
     },
+    userId:{
+        type :String
+    }
 });
 
 const CarDetail = new model("CarDetail",CarDetailsSchema);
