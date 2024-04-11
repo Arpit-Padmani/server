@@ -4,6 +4,7 @@ const authcontrollers = require('../contoller/auth-controller');
 const validate = require('../midellwares/validate_midelware');
 const authMiddleware = require('../midellwares/authMiddleware');
 const {signUpSchema , loginSchema} = require('../validators/auth-validator');
+const forgotPassword = require('../contoller/forgotPassword-controller');
 
 router.route("/").get(authcontrollers.home);
 

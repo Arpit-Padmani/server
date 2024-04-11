@@ -57,7 +57,7 @@ const getProductById = async (req, res) => {
     try {
         const id = req.params.id;
         const product = await CarDetail.findById(id);
-        // console.log(product);
+        console.log(product);
 
         if (!product) {
             return res.status(404).json({ error: 'Product not found' });

@@ -5,26 +5,27 @@ const Owner = require('../models/owner-model');
 const authMiddleware = async (req, res, next) => {
     const token = req.header('Authorization');
 
+    // console.log("Received Token:", token);
     if (!token) {
         return res.status(401).json({
-            message: "Token is not valid"
+            message: "Token is not provided"
         });
     }
 
     const jwtToken = token.replace("Bearer ", "").trim();
+    // console.log('Extracted Token:', jwtToken);
 
     try {
-        // console.log('Raw Token:', jwtToken);
         const isVerified = jwt.verify(jwtToken, process.env.JWT_SECRET_KEY);
-        console.log("jwt token"+isVerified);
-        
+        // console.log("Decoded Token:", isVerified);
+
         let userData;
         if (isVerified.userType == 'renter') {
             userData = await Renter.findOne({ email: isVerified.email }).select({ password: 0 });
         } else if (isVerified.userType == 'owner') {
             userData = await Owner.findOne({ email: isVerified.email }).select({ password: 0 });
         }
-        // console.log("ftv " + userData);
+        // console.log("User Data:", userData);
 
         if (!userData) {
             return res.status(401).json({
@@ -38,10 +39,13 @@ const authMiddleware = async (req, res, next) => {
 
         next();
     } catch (error) {
-        console.error("Error verifying token:", error);
-        return res.status(401).json({
-            message: "Token is not valid"
-        });
+        let errorMessage = "Token is not valid";
+        if (error.name === 'TokenExpiredError') {
+            errorMessage = "Token has expired";
+        } else if (error.name === 'JsonWebTokenError') {
+            errorMessage = "Invalid token";
+        }
+        return res.status(401).json({ message: errorMessage });
     }
 };
 
