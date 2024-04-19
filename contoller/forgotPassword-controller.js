@@ -28,7 +28,7 @@ const forgotPassword = async (req, res) => {
     const token = jwt.sign({ id: userExist._id }, "RENTALWEBSITE", { expiresIn: "1d" });
     // console.log(token);
     var transporter = nodemailer.createTransport({
-      service:'gmail',
+      service: 'gmail',
       host: 'smtp.gmail.com',
       port: 465,
       secure: true,
@@ -39,22 +39,39 @@ const forgotPassword = async (req, res) => {
     });
     // console.log(transporter);
 
-    var mailOptions = {
+    const mailOptions = {
       from: 'padmaniarpit195@gmail.com',
-      to: 'arpitpadmani197@gmail.com',
+      to: 'jaygundaraniya074@gmail.com',
       subject: 'Reset Your Password',
-      text: `Dear User, 
-
-      We received a request to reset your password for your account associated with the email address ${userExist.email} on our RentEasy. To proceed with resetting your password, please click the link below:
-      
-      Reset Your Password:
-      http://localhost:3000/resetPassword/${userExist._id}/${token}
-      If you did not request a password reset or if you believe this email was sent in error, please ignore this message.
-
-      Thank you,
-      RentEasy Team`
-
+      html: `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Password Reset</title>
+        </head>
+        <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+    
+          <div style="background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h1 style="color: #333; text-align: center;">Reset Your Password</h1>
+            <p style="color: #555; text-align: center;">Dear User,</p>
+            <p style="color: #555; text-align: center;">We received a request to reset your password for your account associated with the email address <strong>${userExist.email}</strong> on our RentEasy.</p>
+            <p style="color: #555; text-align: center;">To proceed with resetting your password, please click the button below:</p>
+            
+            <div style="text-align: center; margin-top: 20px;">
+              <a href="http://localhost:3000/resetPassword/${userExist._id}/${token}" style="background-color: #007bff; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reset Your Password</a>
+            </div>
+    
+            <p style="color: #555; text-align: center; margin-top: 20px;">If you did not request a password reset or if you believe this email was sent in error, please ignore this message.</p>
+            <p style="color: #555; text-align: center;">Thank you,<br>RentEasy Team</p>
+          </div>
+    
+        </body>
+        </html>
+      `
     };
+
 
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
