@@ -87,8 +87,6 @@ const getKey = async (req, res) => {
 const sendPaymentEmail = async (req, res) => {
     try {
         const userData = req.body;
-        // console.log(userData);
-        // console.log(email);
         var transporter = nodemailer.createTransport({
             service: 'gmail',
             host: 'smtp.gmail.com',
@@ -102,20 +100,62 @@ const sendPaymentEmail = async (req, res) => {
 
         var mailOptions = {
             from: 'youremail@gmail.com',
-            to: 'arpitpadmani197@gmail.com', // Assuming email is present in userData
-            // to: userData.email, // Assuming email is present in userData
+            // to: 'jaygundaraniya074@gmail.com', 
+            to: userData.email, 
             subject: 'Congratulations! Your Dream Ride Awaits: Payment Confirmed for Your RentEasy Car Booking 🚗✨',
-            text: `Dear User,
-
-            We're thrilled to inform you that your payment for booking a car with RentEasy has been successfully processed! 🌟 Get ready for an unforgettable journey ahead in your dream ride.
-            
-            Your booking is confirmed, and we can't wait to see you enjoy the freedom of the open road in style. If you have any questions or need assistance, feel free to reach out to our support team at [Support Email or Phone].
-            
-            Thank you for choosing RentEasy, where every ride is an adventure!
-            
-            Happy travels,
-            RentEasy Team`
+            html: `
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Congratulations!</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            background-color: #f4f4f4;
+                            padding: 20px;
+                        }
+                        .container {
+                            background-color: #fff;
+                            padding: 20px;
+                            border-radius: 10px;
+                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                            border: 2px solid #007bff;
+                        }
+                        .header {
+                            color: #333;
+                            text-align: center;
+                            margin-bottom: 20px;
+                        }
+                        .content {
+                            color: #555;
+                            text-align: center;
+                            margin-bottom: 20px;
+                            font-size: 18px;
+                        }
+                        .footer {
+                            color: #555;
+                            text-align: center;
+                            margin-top: 20px;
+                            font-style: italic;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <h1 class="header">Congratulations! Your Dream Ride Awaits 🚗✨</h1>
+                        <p class="content">Dear User,</p>
+                        <p class="content">We're thrilled to inform you that your payment for booking a car with RentEasy has been successfully processed! 🌟 Get ready for an unforgettable journey ahead in your dream ride.</p>
+                        <p class="content">Your booking is confirmed, and we can't wait to see you enjoy the freedom of the open road in style.</p>
+                        <p class="footer">Thank you for choosing RentEasy, where every ride is an adventure!</p>
+                        <p class="footer">Happy travels,<br>RentEasy Team</p>
+                    </div>
+                </body>
+                </html>
+            `
         };
+
+
 
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
@@ -133,4 +173,4 @@ const sendPaymentEmail = async (req, res) => {
 }
 
 
-module.exports = { checkoutAdd, getCheckoutById, payment, verifyPayment, getKey , sendPaymentEmail };
+module.exports = { checkoutAdd, getCheckoutById, payment, verifyPayment, getKey, sendPaymentEmail };
