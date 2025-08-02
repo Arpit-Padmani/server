@@ -19,14 +19,13 @@ const carDetail = require("./contoller/carDetail-controller");
 const Images = require("./models/imgDetail-model");
 
 const corsOption = {
-  origin: "http://localhost:3000",
+  origin: "http://localhost:3001",
   methods: "GET,POST,DELETE,PUT,PATCH,HEAD",
   credentials: true,
 };
 app.use(cors(corsOption));
 
 
-// const multer= require('multer');
 const path = require('path');
 
 {/**
@@ -69,8 +68,13 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+// app.post('/api/add-vehicle', (res,req) =>{
+//     res.json({ message: 'Car details added successfully'});
 
+//   console.log("object");
+// } );
 app.post('/api/add-vehicle', upload.fields([{ name: 'photo1' }, { name: 'photo2' }, { name: 'photo3' }]), async (req, res) => {
+  console.log("object");
   try {
     const carDetails = JSON.parse(req.body.carDetails);
     // console.log(carDetails);
@@ -84,7 +88,7 @@ app.post('/api/add-vehicle', upload.fields([{ name: 'photo1' }, { name: 'photo2'
   } catch (error) {
     console.error(error);
     console.error('Error processing /api/add-vehicle:', error);
-    res.status(500).json({ message: 'Inter  nal server error Server.js' });
+    res.status(500).json({ message: 'Internal server error Server.js' });
   }
 });
 
@@ -170,8 +174,8 @@ app.use('/api/orders', orderRouter);
 app.use(errorMIddelware);
 
 connectDB().then(() => {
-  app.listen(5000, () => {
-    console.log(" server is running ");
+  app.listen(3000, () => {
+    console.log("server is running ");
   });
 });
 

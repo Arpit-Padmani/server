@@ -145,6 +145,14 @@ const userdata = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
+const testuser = async (req, res) => {
+    try {
+        res.status(200).json({ msg:"message is testing" });
+    } catch (error) {
+        console.log("Error from user route ", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
 
 const updatetUserById = async (req, res) => {
     try {
@@ -180,4 +188,4 @@ const updatetUserById = async (req, res) => {
     }
 }
 
-module.exports = { home, register, login, userdata, updatetUserById };
+module.exports = { home, register, login, userdata, updatetUserById ,testuser };

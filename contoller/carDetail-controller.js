@@ -50,7 +50,7 @@ const getProductById = async (req, res) => {
     try {
         const id = req.params.id;
         console.log(id);
-        const product = await CarDetail.findById(id);
+        const product = await CarDetail.findOne({_id:id});
         console.log(product);
 
         if (!product) {

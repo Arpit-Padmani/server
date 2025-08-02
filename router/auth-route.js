@@ -12,6 +12,9 @@ router.route("/").get(authcontrollers.home);
 router
     .route('/user')
     .get(authMiddleware,authcontrollers.userdata);
+router
+    .route('/testuser')
+    .get(authcontrollers.testuser);
 
 router
     .route("/register")

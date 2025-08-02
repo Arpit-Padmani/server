@@ -61,7 +61,7 @@ const forgotPassword = async (req, res) => {
             <p style="color: #555; text-align: center;">To proceed with resetting your password, please click the button below:</p>
             
             <div style="text-align: center; margin-top: 20px;">
-              <a href="http://localhost:3000/resetPassword/${userExist._id}/${token}" style="background-color: #007bff; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reset Your Password</a>
+              <a href="http://localhost:3001/resetPassword/${userExist._id}/${token}" style="background-color: #007bff; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reset Your Password</a>
             </div>
     
             <p style="color: #555; text-align: center; margin-top: 20px;">If you did not request a password reset or if you believe this email was sent in error, please ignore this message.</p>
@@ -92,10 +92,14 @@ const resetPassword = async (req, res) => {
   const { id, token } = req.params;
   const { password } = req.body;
   console.log(password);
+  console.log(id);
+  console.log(token);
 
   jwt.verify(token, "RENTALWEBSITE", async (err, decode) => {
+    console.log(err);
     if (err) {
-      req.json({ message: "error in reset password" });
+      console.error("JWT verification error:", err);
+    return res.status(400).json({ message: "Invalid token in reset password" });
     }
     else {
       try {

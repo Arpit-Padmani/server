@@ -21,20 +21,62 @@ const checkoutAdd = async (req, res) => {
 
 const getCheckoutById = async (req, res) => {
     try {
+        const carIds  = req.params.id;
+        console.log(carIds);
+        const products = await CheckOut.find({ _id: { $in: carIds } });
+        console.log(products);
+
+        if (!products) {
+            return res.status(404).json({ error: 'Checkout Detail  not found' });
+        }
+
+        res.json({ success: true, products });
+    } catch (error) {
+        console.log(error);
+        res.status(401).json({ message: "Error in find checkout Detail" });
+    }
+}
+
+const getmulticheckoutDetial = async (req, res) => {
+    try {
+        const {carIds}  = req.body;
+        console.log("carIds");
+        const products = await CheckOut.find({ carId: { $in: carIds } });
+        console.log(products);
+
+        if (!products) {
+            return res.status(404).json({ error: 'Checkout Detail  not found' });
+        }
+
+        res.json({ success: true, products });
+    } catch (error) {
+        console.log(error);
+        res.status(401).json({ message: "Error in find checkout Detail" });
+    }
+}
+
+const getCheckoutProductById = async (req, res) => {
+    try {
         const id = req.params.id;
-        const product = await CheckOut.findById(id);
+        console.log(id);
+        const product = await CheckOut.findOne({ carId: id });
         console.log(product);
 
         if (!product) {
-            return res.status(404).json({ error: 'Product not found' });
+            console.log("object");
+            return res.status(404).json({ 
+                success : false,
+                message: 'Product Not FOund in Checkout detail'
+             });
         }
 
-        res.json(product);
+        res.json({ success: true, product });
     } catch (error) {
         console.log(error);
-        res.status(401).json({ message: "error in display single product" });
+        res.status(401).json({ message: "Error in find product in checkout Details" });
     }
 }
+
 
 const instance = new Razorpay({
     key_id: process.env.KEYID,
@@ -68,7 +110,7 @@ const verifyPayment = async (req, res) => {
         await Payment.create({
             razorpay_order_id, razorpay_payment_id, razorpay_signature, userId, carId, paymentMethod, amount
         })
-        res.redirect(`http://localhost:3000/paymentsuccess`)
+        res.redirect(`http://localhost:3001/paymentsuccess`)
     }
     else {
         console.log("error in paymentverification");
@@ -101,7 +143,7 @@ const sendPaymentEmail = async (req, res) => {
         var mailOptions = {
             from: 'youremail@gmail.com',
             // to: 'jaygundaraniya074@gmail.com', 
-            to: userData.email, 
+            to: userData.email,
             subject: 'Congratulations! Your Dream Ride Awaits: Payment Confirmed for Your RentEasy Car Booking 🚗✨',
             html: `
                 <html lang="en">
@@ -173,4 +215,4 @@ const sendPaymentEmail = async (req, res) => {
 }
 
 
-module.exports = { checkoutAdd, getCheckoutById, payment, verifyPayment, getKey, sendPaymentEmail };
+module.exports = { checkoutAdd, getCheckoutById, getCheckoutProductById, getmulticheckoutDetial, payment, verifyPayment, getKey, sendPaymentEmail };

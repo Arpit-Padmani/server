@@ -11,6 +11,14 @@ router
     .get(checkout.getCheckoutById);
 
 router
+    .route("/getmulticheckoutDetial")
+    .post(checkout.getmulticheckoutDetial);
+
+router
+    .route("/getCheckoutProduct/:id")
+    .get(checkout.getCheckoutProductById);
+
+router
     .route("/payment")
     .post(checkout.payment);
 
