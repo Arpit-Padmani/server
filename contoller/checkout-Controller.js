@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const Payment = require("../models/payment-model");
 const dotenv = require('dotenv');
 const nodemailer = require('nodemailer');
-
+const generateInvoice = require('../utils/invoiceGenerator');
 dotenv.config();
 
 const checkoutAdd = async (req, res) => {
@@ -99,7 +99,7 @@ const payment = async (req, res) => {
 }
 
 const verifyPayment = async (req, res) => {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, userId, carId, paymentMethod, amount } = req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, userId, carId, paymentMethod, amount,email } = req.body;
     console.log(userId);
     console.log(razorpay_payment_id);
     const body = razorpay_order_id + "|" + razorpay_payment_id;
@@ -110,6 +110,42 @@ const verifyPayment = async (req, res) => {
         await Payment.create({
             razorpay_order_id, razorpay_payment_id, razorpay_signature, userId, carId, paymentMethod, amount
         })
+        const pdfPath = await generateInvoice(
+            { razorpay_payment_id, carId, amount },
+            { email }
+        );const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            }
+        });
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Your RentEasy Booking Invoice',
+            html: `
+                <h3>Thank you for your booking, ${'Customer'}!</h3>
+                <p>Your payment has been successfully received.</p>
+                <p>Please find your booking invoice attached.</p>
+                <p>We look forward to seeing you on the road 🚗✨</p>
+            `,
+            attachments: [
+                {
+                    filename: `invoice-${razorpay_payment_id}.pdf`,
+                    path: pdfPath
+                }
+            ]
+        };
+
+        transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                console.log("Error sending invoice email:", err);
+            } else {
+                console.log("Invoice email sent:", info.response);
+            }
+        });
         res.redirect(`http://localhost:3001/paymentsuccess`)
     }
     else {
