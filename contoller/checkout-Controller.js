@@ -126,7 +126,7 @@ const verifyPayment = async (req, res) => {
             to: email,
             subject: 'Your RentEasy Booking Invoice',
             html: `
-                <h3>Thank you for your booking, ${'Customer'}!</h3>
+                <h3>Thank you for your booking, Customer'!</h3>
                 <p>Your payment has been successfully received.</p>
                 <p>Please find your booking invoice attached.</p>
                 <p>We look forward to seeing you on the road 🚗✨</p>
